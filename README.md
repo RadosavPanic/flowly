@@ -1,2 +1,3 @@
-# flowly
-Social Media App
+# Flowly
+
+Social Media App | Next.js, TypeScript
