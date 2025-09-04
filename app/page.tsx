@@ -16,13 +16,16 @@ export default function Home() {
         <Link href="/" className="flex items-center border-b-4 pb-3">
           Following
         </Link>
-        <Link href="/" className="flex items-center border-b-4 pb-3">
+
+        <Link href="/" className="hidden md:flex items-center border-b-4 pb-3">
           React.js
         </Link>
-        <Link href="/" className="flex items-center border-b-4 pb-3">
+
+        <Link href="/" className="hidden md:flex items-center border-b-4 pb-3">
           Following
         </Link>
-        <Link href="/" className="flex items-center border-b-4 pb-3">
+
+        <Link href="/" className="hidden md:flex items-center border-b-4 pb-3">
           CSS
         </Link>
       </div>
