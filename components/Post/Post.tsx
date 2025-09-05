@@ -4,9 +4,11 @@ import { getFileDetails } from "@/utils/imagekit/fileDetails";
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
 import { icons } from "@/constants";
+import cn from "clsx";
+import OptimizedVideo from "../OptimizedVideo/OptimizedVideo";
 
-const Post = async () => {
-  const fileDetails = await getFileDetails("68bac5215c7cd75eb877da81");
+const Post = async ({ fileId }: { fileId: string }) => {
+  const fileDetails = await getFileDetails(fileId);
 
   return (
     <div className="p-4 border-y border-borderGray">
@@ -37,18 +39,30 @@ const Post = async () => {
           </div>
 
           <p className="">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum
-            doloribus iure dolorem odit consectetur. Commodi eius odit, libero
-            doloribus ea veritatis itaque beatae rem quam nihil officiis nulla
-            qui corporis.
+            The morning sky painted itself with shades of gold and soft blue.
+            The sound of leaves dancing in the wind carried a calm I didn’t know
+            I needed. Every breath felt lighter, every step felt slower, as if
+            the world had pressed pause. In that quiet, I found a moment of
+            peace, simple and complete.
           </p>
-          {fileDetails && (
+          {fileDetails && fileDetails.fileType === "image" ? (
             <OptimizedImage
               src={fileDetails.filePath}
               alt=""
               width={fileDetails.width}
               height={fileDetails.height}
-              className={fileDetails.customMetaData?.sensitive ? "blur-lg" : ""}
+              className={cn(
+                "",
+                fileDetails.customMetadata?.sensitive && "blur-lg"
+              )}
+            />
+          ) : (
+            <OptimizedVideo
+              src={fileDetails.filePath}
+              className={cn(
+                "",
+                fileDetails.customMetadata?.sensitive && "blur-lg"
+              )}
             />
           )}
 

@@ -5,29 +5,21 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-      <div className="flex justify-between text-textGray font-bold border-b border-borderGray px-4 pt-4">
-        <Link
-          href="/"
-          className="flex items-center border-b-4 border-iconBlue pb-3"
-        >
-          For you
-        </Link>
+      <div className="px-4 pt-4 flex justify-between text-textGray font-bold border-b-[1px] border-borderGray">
+        <div className="flex-1 flex items-center justify-center">
+          <Link
+            className="pb-3 flex items-center text-textGrayLight border-b-4 border-iconBlue"
+            href="/"
+          >
+            For you
+          </Link>
+        </div>
 
-        <Link href="/" className="flex items-center border-b-4 pb-3">
-          Following
-        </Link>
-
-        <Link href="/" className="hidden md:flex items-center border-b-4 pb-3">
-          React.js
-        </Link>
-
-        <Link href="/" className="hidden md:flex items-center border-b-4 pb-3">
-          Following
-        </Link>
-
-        <Link href="/" className="hidden md:flex items-center border-b-4 pb-3">
-          CSS
-        </Link>
+        <div className="flex-1 flex items-center justify-center">
+          <Link className="pb-3 flex items-center" href="/">
+            Following
+          </Link>
+        </div>
       </div>
 
       <Share />

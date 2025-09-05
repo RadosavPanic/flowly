@@ -66,9 +66,11 @@ const Share = () => {
         file: buffer,
         fileName: media.name,
         folder: "/posts",
-        transformation: {
-          pre: transformation,
-        },
+        ...(media.type.includes("image") && {
+          transformation: {
+            pre: transformation,
+          },
+        }),
         customMetadata: {
           sensitive: settings.sensitive,
         },
@@ -108,7 +110,7 @@ const Share = () => {
           placeholder="What is happening?"
           className="bg-transparent outline-none placeholder:text-textGray text-xl"
         />
-        {previewUrl && (
+        {media?.type.includes("image") && previewUrl && (
           <div className="relative rounded-xl overflow-hidden">
             <Image
               src={previewUrl}
@@ -129,6 +131,24 @@ const Share = () => {
               onClick={() => setIsEditorOpen(true)}
             >
               Edit
+            </div>
+            <div
+              className="absolute top-2 right-2 bg-black/50 text-white size-8 flex items-center justify-center rounded-full cursor-pointer font-bold text-sm"
+              onClick={() => setMedia(null)}
+            >
+              X
+            </div>
+          </div>
+        )}
+
+        {media?.type.includes("video") && previewUrl && (
+          <div className="relative">
+            <video src={previewUrl} controls className="rounded-xl" />
+            <div
+              className="absolute top-2 right-2 bg-black/50 text-white size-8 flex items-center justify-center rounded-full cursor-pointer font-bold text-sm"
+              onClick={() => setMedia(null)}
+            >
+              X
             </div>
           </div>
         )}

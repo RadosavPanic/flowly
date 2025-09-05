@@ -9,5 +9,19 @@ type FileDetails = {
   filePath: string;
   url: string;
   fileType: string;
-  customMetaData?: { sensitive: boolean };
+  customMetadata?: { sensitive: boolean };
+};
+
+type ImageType = {
+  src: string;
+  width?: number;
+  height?: number;
+  alt: string;
+  className?: string;
+  tr?: boolean;
+};
+
+type VideoType = {
+  src: string;
+  className?: string;
 };
