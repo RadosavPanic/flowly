@@ -1,10 +1,13 @@
-import React from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import { getFileDetails } from "@/utils/imagekit/fileDetails";
+
 import PostInfo from "./PostInfo";
 import PostInteractions from "./PostInteractions";
 import { icons } from "@/constants";
 
-const Post = () => {
+const Post = async () => {
+  const fileDetails = await getFileDetails("68bac5215c7cd75eb877da81");
+
   return (
     <div className="p-4 border-y border-borderGray">
       <div className="flex items-center gap-2 text-sm mb-2 font-bold text-textGray">
@@ -39,12 +42,16 @@ const Post = () => {
             doloribus ea veritatis itaque beatae rem quam nihil officiis nulla
             qui corporis.
           </p>
-          <OptimizedImage
-            src="general/post.jpeg"
-            alt=""
-            width={600}
-            height={600}
-          />
+          {fileDetails && (
+            <OptimizedImage
+              src={fileDetails.filePath}
+              alt=""
+              width={fileDetails.width}
+              height={fileDetails.height}
+              className={fileDetails.customMetaData?.sensitive ? "blur-lg" : ""}
+            />
+          )}
+
           <PostInteractions />
         </div>
       </div>

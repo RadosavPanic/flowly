@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import Image from "next/image";
 import {
   upload,
   ImageKitAbortError,
@@ -11,9 +12,16 @@ import {
 } from "@imagekit/next";
 
 import { authenticateUser } from "@/utils/imagekit";
+import ImageEditor from "../ImageEditor/ImageEditor";
+import cn from "clsx";
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>();
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [settings, setSettings] = useState<EditorSettings>({
+    type: "original",
+    sensitive: false,
+  });
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) setMedia(e.target.files[0]);
@@ -41,8 +49,16 @@ const Share = () => {
 
     const { signature, expire, token, publicKey } = authParams;
 
+    const transformation = `w-600, ${
+      settings.type === "square"
+        ? "ar-1-1"
+        : settings.type === "wide"
+        ? "ar-16-9"
+        : ""
+    }`;
+
     try {
-      const response = await upload({
+      await upload({
         expire,
         token,
         signature,
@@ -51,11 +67,12 @@ const Share = () => {
         fileName: media.name,
         folder: "/posts",
         transformation: {
-          pre: "w-600",
+          pre: transformation,
+        },
+        customMetadata: {
+          sensitive: settings.sensitive,
         },
       });
-
-      if (response) alert(`Success! URL: ${response.url}`);
     } catch (uploadError) {
       if (uploadError instanceof ImageKitAbortError)
         console.error("Upload aborted:", uploadError.reason);
@@ -68,6 +85,8 @@ const Share = () => {
       else console.error("Upload error:", uploadError);
     }
   };
+
+  const previewUrl = media ? URL.createObjectURL(media) : null;
 
   return (
     <form className="p-4 flex gap-4" onSubmit={handleUpload}>
@@ -89,7 +108,39 @@ const Share = () => {
           placeholder="What is happening?"
           className="bg-transparent outline-none placeholder:text-textGray text-xl"
         />
+        {previewUrl && (
+          <div className="relative rounded-xl overflow-hidden">
+            <Image
+              src={previewUrl}
+              alt=""
+              width={600}
+              height={600}
+              className={cn(
+                "w-full",
+                settings.type === "original"
+                  ? "h-full object-contain"
+                  : settings.type === "square"
+                  ? "aspect-square object-cover"
+                  : "aspect-video object-cover"
+              )}
+            />
+            <div
+              className="absolute top-2 left-2 bg-black/50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer"
+              onClick={() => setIsEditorOpen(true)}
+            >
+              Edit
+            </div>
+          </div>
+        )}
 
+        {isEditorOpen && previewUrl && (
+          <ImageEditor
+            onClose={() => setIsEditorOpen(false)}
+            previewUrl={previewUrl}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        )}
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex gap-4 flex-wrap">
             <input
@@ -98,6 +149,7 @@ const Share = () => {
               onChange={handleMediaChange}
               className="hidden"
               id="file"
+              accept="image/*,video/*"
             />
             <label htmlFor="file">
               <OptimizedImage
