@@ -40,7 +40,7 @@ const LeftBar = () => {
 
         {/* BUTTON */}
         <Link
-          href="/"
+          href="/compose/post"
           className="bg-white text-black rounded-full size-12 flex items-center justify-center xxl:hidden"
         >
           <OptimizedImage
@@ -52,7 +52,7 @@ const LeftBar = () => {
         </Link>
 
         <Link
-          href="/"
+          href="/compose/post"
           className="hidden xxl:block bg-white text-black rounded-full font-bold py-2 px-20"
         >
           Post

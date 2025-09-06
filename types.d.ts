@@ -25,3 +25,7 @@ type VideoType = {
   src: string;
   className?: string;
 };
+
+type PostType = {
+  type: "status" | "content";
+};

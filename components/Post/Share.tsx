@@ -103,12 +103,16 @@ const Share = () => {
       </div>
 
       <div className="flex-1 flex flex-col gap-4">
-        <input
-          type="text"
+        <textarea
           name="desc"
           autoComplete="off"
+          rows={1}
           placeholder="What is happening?"
-          className="bg-transparent outline-none placeholder:text-textGray text-xl"
+          className="bg-transparent outline-none placeholder:text-textGray text-xl resize-none leading-relaxed"
+          onInput={(e) => {
+            e.currentTarget.style.height = "auto";
+            e.currentTarget.style.height = e.currentTarget.scrollHeight + "px";
+          }}
         />
         {media?.type.includes("image") && previewUrl && (
           <div className="relative rounded-xl overflow-hidden">

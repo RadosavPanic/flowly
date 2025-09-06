@@ -1,6 +1,7 @@
 import React from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import { icons } from "@/constants";
+import Link from "next/link";
 
 const PopularTags = () => {
   return (
@@ -64,6 +65,9 @@ const PopularTags = () => {
         <h2 className="text-textGrayLight font-bold">World Cup</h2>
         <span className="text-textGray text-sm">17K posts</span>
       </div>
+      <Link href="/" className="text-iconBlue">
+        Show More
+      </Link>
     </div>
   );
 };
