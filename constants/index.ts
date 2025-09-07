@@ -6,7 +6,7 @@ import Emoji from "../public/icons/emoji.svg";
 import Explore from "../public/icons/explore.svg";
 import Gif from "../public/icons/gif.svg";
 import Home from "../public/icons/home.svg";
-import ImageIcon from "../public/icons/image.svg"; // renamed to avoid conflict with next/image
+import ImageIcon from "../public/icons/image.svg";
 import InfoMore from "../public/icons/infoMore.svg";
 import Job from "../public/icons/job.svg";
 import Location from "../public/icons/location.svg";
@@ -19,6 +19,8 @@ import Profile from "../public/icons/profile.svg";
 import Schedule from "../public/icons/schedule.svg";
 import UserLocation from "../public/icons/userLocation.svg";
 import Flowly from "../public/icons/flowly.svg";
+import Google from "../public/icons/google.svg";
+import Apple from "../public/icons/apple.svg";
 
 import Arrow from "../public/icons/arrow.svg";
 import Comment from "../public/icons/comment.svg";
@@ -61,6 +63,8 @@ export const icons = {
   Share,
   Square,
   Wide,
+  Google,
+  Apple,
 };
 
 export const menuList = [
