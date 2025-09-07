@@ -11,18 +11,28 @@ const SignInPage = () => {
   return (
     <div className="h-screen flex items-center justify-between p-8">
       <div className="hidden lg:flex w-1/2 items-center justify-center">
-        <Image src="/general/flowly.png" alt="" width={350} height={350} />
+        <div className="relative w-[350px] h-[350px]">
+          <Image
+            src="/general/flowly.png"
+            alt="flowly"
+            fill
+            priority
+            className="object-contain"
+          />
+        </div>
       </div>
 
       <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-baseline gap-4">
         <div className="flex w-72 justify-start mb-5 lg:hidden">
-          <Image
-            src="/general/flowly.png"
-            alt=""
-            width={100}
-            height={100}
-            className=""
-          />
+          <div className="relative w-[100px] h-[100px]">
+            <Image
+              src="/general/flowly.png"
+              alt="flowly"
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
         </div>
 
         <h1 className="text-4xl md:text-4xl lg:text-6xl font-bold w-xs lg:w-lg bg-blue-500 rounded-br-full rounded-tl-full px-4 py-0.5 mb-6 lg:text-center">
