@@ -1,79 +1,64 @@
 import Link from "next/link";
 import React from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import { prisma } from "@/utils/prisma/prisma";
+import { auth } from "@clerk/nextjs/server";
 
-const Recommendations = () => {
+const Recommendations = async () => {
+  const { userId } = await auth();
+
+  if (!userId) return;
+
+  const followingIds = await prisma.follow.findMany({
+    where: { followerId: userId },
+    select: { followingId: true },
+  });
+
+  const followedUserIds = followingIds.map((f) => f.followingId);
+
+  const friendRecommendations = await prisma.user.findMany({
+    where: {
+      id: { not: userId, notIn: followedUserIds },
+      followings: { some: { followerId: { in: followedUserIds } } },
+    },
+    take: 3,
+    select: {
+      id: true,
+      displayName: true,
+      username: true,
+      img: true,
+    },
+  });
+
   return (
     <div className="p-4 rounded-2xl border border-borderGray flex flex-col gap-4">
-      {/* USER CARD */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="relative rounded-full overflow-hidden size-10">
-            <OptimizedImage
-              src="general/elonmusk.png"
-              alt="Elon Musk"
-              width={100}
-              height={100}
-              tr={true}
-            />
+      {friendRecommendations.map((person) => (
+        <div className="flex items-center justify-between" key={person.id}>
+          <div className="flex items-center gap-2">
+            <div className="relative rounded-full overflow-hidden size-10">
+              <OptimizedImage
+                src={person.img || "general/noAvatar.png"}
+                alt={person.username}
+                width={100}
+                height={100}
+                tr={true}
+              />
+            </div>
+
+            <div className="">
+              <h1 className="text-md font-bold">
+                {person.displayName || person.username}
+              </h1>
+              <span className="text-textGray text-sm">@{person.username}</span>
+            </div>
           </div>
 
-          <div className="">
-            <h1 className="text-md font-bold">Elon Musk</h1>
-            <span className="text-textGray text-sm">@elonmusk</span>
-          </div>
+          <button className="py-1 px-4 font-semibold bg-white text-black rounded-full">
+            Follow
+          </button>
         </div>
+      ))}
 
-        <button className="py-1 px-4 font-semibold bg-white text-black rounded-full">
-          Follow
-        </button>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="relative rounded-full overflow-hidden size-10">
-            <OptimizedImage
-              src="general/lexfridman.png"
-              alt="Elon Musk"
-              width={100}
-              height={100}
-              tr={true}
-            />
-          </div>
-
-          <div className="">
-            <h1 className="text-md font-bold">Lex Fridman</h1>
-            <span className="text-textGray text-sm">@lexfridman</span>
-          </div>
-        </div>
-
-        <button className="py-1 px-4 font-semibold bg-white text-black rounded-full">
-          Follow
-        </button>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="relative rounded-full overflow-hidden size-10">
-            <OptimizedImage
-              src="general/dogecoin.png"
-              alt="Elon Musk"
-              width={100}
-              height={100}
-              tr={true}
-            />
-          </div>
-
-          <div className="">
-            <h1 className="text-md font-bold">DogeCoin</h1>
-            <span className="text-textGray text-sm">@dogecoin</span>
-          </div>
-        </div>
-
-        <button className="py-1 px-4 font-semibold bg-white text-black rounded-full">
-          Follow
-        </button>
-      </div>
       <Link href="/" className="text-iconBlue">
         Show More
       </Link>

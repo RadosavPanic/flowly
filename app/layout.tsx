@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "Flowly - Share Your Voice, Catch the Vibe",
@@ -15,11 +16,13 @@ export default function AppLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="bg-black/100 text-white-100 font-sans">
-          {children}
-        </body>
-      </html>
+      <QueryProvider>
+        <html lang="en">
+          <body className="bg-black/100 text-white-100 font-sans">
+            {children}
+          </body>
+        </html>
+      </QueryProvider>
     </ClerkProvider>
   );
 }

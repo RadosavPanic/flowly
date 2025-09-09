@@ -1,8 +1,17 @@
 import React from "react";
 import Post from "@/components/Post/Post";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import { CommentWithDetails } from "@/types";
 
-const Comments = () => {
+const Comments = ({
+  comments,
+  postId,
+  username,
+}: {
+  comments: CommentWithDetails[];
+  postId: number;
+  username: string;
+}) => {
   return (
     <div className="">
       <form className="flex items-center justify-between gap-4 p-4">
@@ -24,9 +33,11 @@ const Comments = () => {
           Reply
         </button>
       </form>
-      <Post type="status" />
-      <Post type="status" />
-      <Post type="status" />
+      {comments.map((comment) => (
+        <div key={comment.id}>
+          <Post post={comment} type="comment" />
+        </div>
+      ))}
     </div>
   );
 };
