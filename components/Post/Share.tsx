@@ -10,6 +10,7 @@ import {
   ImageKitUploadNetworkError,
   ImageKitServerError,
 } from "@imagekit/next";
+import { EditorSettings } from "@/types";
 
 import { authenticateUser } from "@/utils/imagekit";
 import ImageEditor from "../ImageEditor/ImageEditor";

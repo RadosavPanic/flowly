@@ -1,8 +1,11 @@
 import Feed from "@/components/Feed/Feed";
 import Share from "@/components/Post/Share";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 export default async function Home() {
+  const { userId } = await auth();
+
   return (
     <div>
       <div className="px-4 pt-4 flex justify-between text-textGray font-bold border-b-[1px] border-borderGray">
@@ -23,7 +26,7 @@ export default async function Home() {
       </div>
 
       <Share />
-      <Feed />
+      <Feed userProfileId={userId!} />
     </div>
   );
 }

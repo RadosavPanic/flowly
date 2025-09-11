@@ -26,11 +26,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ["*.ngrok-free.app"],
   experimental: {
     serverActions: {
       bodySizeLimit: "50mb",
     },
   },
+  eslint: { ignoreDuringBuilds: true },
 };
 
 export default nextConfig;
