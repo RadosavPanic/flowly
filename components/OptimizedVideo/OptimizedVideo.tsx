@@ -1,6 +1,7 @@
 "use client";
 
 import { Video } from "@imagekit/next";
+import { VideoType } from "@/types";
 
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import cn from "clsx";
 import { icons } from "@/constants";
+import { EditorSettings } from "@/types";
 
 type ImageEditorType = {
   onClose: () => void;

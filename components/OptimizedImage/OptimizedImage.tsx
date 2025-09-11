@@ -1,6 +1,7 @@
 "use client";
 
 import { Image } from "@imagekit/next";
+import { ImageType } from "@/types";
 
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 
