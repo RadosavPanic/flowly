@@ -15,6 +15,7 @@ import { EditorSettings } from "@/types";
 import { authenticateUser } from "@/utils/imagekit";
 import ImageEditor from "../ImageEditor/ImageEditor";
 import cn from "clsx";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>();
@@ -102,6 +103,9 @@ const Share = () => {
           tr={true}
         />
       </div>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
 
       <div className="flex-1 flex flex-col gap-4">
         <textarea

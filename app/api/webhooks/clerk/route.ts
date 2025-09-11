@@ -4,7 +4,9 @@ import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const event = await verifyWebhook(req);
+    const event = await verifyWebhook(req, {
+      signingSecret: process.env.CLERK_WEBHOOK_SIGNING_SECRET,
+    });
 
     if (event.type === "user.created") {
       try {
@@ -16,15 +18,15 @@ export async function POST(req: NextRequest) {
           },
         });
       } catch (error) {
-        return new Response(`Failed to create a user: ${error}`, {
+        return new Response(`Failed to create a user ${error}`, {
           status: 500,
         });
       }
     }
 
     return new Response("Webhook received", { status: 200 });
-  } catch (error) {
-    console.error("Error verifying webhook:", error);
+  } catch (err) {
+    console.error("Error verifying webhook:", err);
     return new Response("Error verifying webhook", { status: 400 });
   }
 }
