@@ -27,6 +27,7 @@ const StatusPage = async ({ params }: SearchParamProps) => {
     include: {
       ...postIncludeQuery,
       comments: {
+        orderBy: { createdAt: "desc" },
         include: postIncludeQuery,
       },
     },

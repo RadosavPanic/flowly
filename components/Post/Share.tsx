@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Image from "next/image";
 import {
@@ -15,7 +15,7 @@ import { EditorSettings } from "@/types";
 import { authenticateUser } from "@/utils/imagekit";
 import ImageEditor from "../ImageEditor/ImageEditor";
 import cn from "clsx";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>();
@@ -92,22 +92,36 @@ const Share = () => {
 
   const previewUrl = media ? URL.createObjectURL(media) : null;
 
+  const { user } = useUser();
+  if (!user) return;
+
   return (
     <form className="p-4 flex gap-4" onSubmit={handleUpload}>
       <div className="relative size-10 rounded-full overflow-hidden">
         <OptimizedImage
-          src="general/avatar.png"
+          src={user?.imageUrl}
           alt=""
           width={100}
           height={100}
           tr={true}
         />
       </div>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
 
       <div className="flex-1 flex flex-col gap-4">
+        <input
+          type="text"
+          name="imgType"
+          value={settings.type}
+          hidden
+          readOnly
+        />
+        <input
+          type="text"
+          name="isSensitive"
+          value={settings.sensitive ? "true" : "false"}
+          hidden
+          readOnly
+        />
         <textarea
           name="desc"
           autoComplete="off"

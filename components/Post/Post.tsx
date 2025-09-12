@@ -113,6 +113,7 @@ const Post = ({
           )}
 
           <PostInteractions
+            postId={originalPost.id}
             count={originalPost._count}
             isLiked={!!originalPost.likes.length}
             isReposted={!!originalPost.reposts.length}

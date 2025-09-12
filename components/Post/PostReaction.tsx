@@ -16,7 +16,7 @@ const PostReaction = ({
   isReposted,
   value,
 }: PostReactionType) => (
-  <div className="flex items-center gap-2 cursor-pointer group">
+  <>
     <Icon
       className={cn(
         "size-5",
@@ -42,7 +42,7 @@ const PostReaction = ({
     >
       {value}
     </span>
-  </div>
+  </>
 );
 
 export default PostReaction;
