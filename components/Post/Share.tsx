@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic, useState, startTransition, useEffect } from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Image from "next/image";
 import {
@@ -16,6 +16,20 @@ import { authenticateUser } from "@/utils/imagekit";
 import ImageEditor from "../ImageEditor/ImageEditor";
 import cn from "clsx";
 import { useUser } from "@clerk/nextjs";
+import z from "zod";
+import { addPost } from "@/actions/action";
+
+const PostSchema = z.object({
+  desc: z.string().max(140),
+  isSensitive: z.boolean().optional(),
+});
+
+type OptimisticPost = {
+  desc: string;
+  mediaUrl?: string;
+  success: boolean;
+  error: boolean;
+};
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>();
@@ -24,6 +38,15 @@ const Share = () => {
     type: "original",
     sensitive: false,
   });
+  const [desc, setDesc] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [optimisticPost, addOptimisticPost] = useOptimistic<
+    OptimisticPost[],
+    OptimisticPost
+  >([], (state, newPost) => [...state, newPost]);
+
+  const { user } = useUser();
+  if (!user) return;
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) setMedia(e.target.files[0]);
@@ -32,51 +55,80 @@ const Share = () => {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!media) {
-      alert("Please select files to upload");
-      return;
+    const validatedFields = PostSchema.safeParse({
+      desc,
+      isSensitive: settings.sensitive,
+    });
+
+    if (!validatedFields.success) {
+      console.log(validatedFields.error.flatten().fieldErrors);
+      setErrorMessage("Description too long or invalid input");
+      return { success: false, error: true };
     }
 
-    const bytes = await media.arrayBuffer();
-    const buffer = Buffer.from(bytes).toString("base64");
-
-    let authParams;
-
-    try {
-      authParams = await authenticateUser();
-    } catch (authError) {
-      console.error("Failed to authenticate for upload", authError);
-      return;
-    }
-
-    const { signature, expire, token, publicKey } = authParams;
-
-    const transformation = `w-600, ${
-      settings.type === "square"
-        ? "ar-1-1"
-        : settings.type === "wide"
-        ? "ar-16-9"
-        : ""
-    }`;
-
-    try {
-      await upload({
-        expire,
-        token,
-        signature,
-        publicKey,
-        file: buffer,
-        fileName: media.name,
-        folder: "/posts",
-        ...(media.type.includes("image") && {
-          transformation: {
-            pre: transformation,
-          },
-        }),
-        customMetadata: {
-          sensitive: settings.sensitive,
-        },
+    startTransition(() => {
+      addOptimisticPost({
+        desc,
+        mediaUrl: media ? URL.createObjectURL(media) : undefined,
+        success: true,
+        error: false,
       });
+    });
+
+    let uploadResult;
+
+    try {
+      if (media) {
+        const bytes = await media.arrayBuffer();
+        const buffer = Buffer.from(bytes).toString("base64");
+
+        const authParams = await authenticateUser();
+
+        const { signature, expire, token, publicKey } = authParams;
+
+        const transformation = `w-600,${
+          settings.type === "square"
+            ? "ar-1-1"
+            : settings.type === "wide"
+            ? "ar-16-9"
+            : ""
+        }`;
+
+        uploadResult = await upload({
+          expire,
+          token,
+          signature,
+          publicKey,
+          file: buffer,
+          fileName: media.name,
+          folder: "/posts",
+          ...(media.type.includes("image") && {
+            transformation: {
+              pre: transformation,
+            },
+          }),
+          customMetadata: {
+            sensitive: settings.sensitive,
+          },
+        });
+      }
+
+      type ExtendedFileType = "image" | "video";
+
+      const result = await addPost({
+        desc: validatedFields.data.desc,
+        isSensitive: validatedFields.data.isSensitive,
+        userId: user.id,
+        img: uploadResult?.fileType === "image" ? uploadResult?.filePath : "",
+        video:
+          (uploadResult?.fileType as ExtendedFileType) === "video"
+            ? uploadResult?.filePath
+            : "",
+      });
+
+      if (!result) throw new Error("DB Insert Failed");
+
+      return { success: true, error: false };
     } catch (uploadError) {
       if (uploadError instanceof ImageKitAbortError)
         console.error("Upload aborted:", uploadError.reason);
@@ -86,14 +138,12 @@ const Share = () => {
         console.error("Network error:", uploadError.message);
       else if (uploadError instanceof ImageKitServerError)
         console.error("Server error:", uploadError.message);
-      else console.error("Upload error:", uploadError);
+      else console.error("Error occured:", uploadError);
+      return;
     }
   };
 
   const previewUrl = media ? URL.createObjectURL(media) : null;
-
-  const { user } = useUser();
-  if (!user) return;
 
   return (
     <form className="p-4 flex gap-4" onSubmit={handleUpload}>
@@ -108,31 +158,22 @@ const Share = () => {
       </div>
 
       <div className="flex-1 flex flex-col gap-4">
-        <input
-          type="text"
-          name="imgType"
-          value={settings.type}
-          hidden
-          readOnly
-        />
-        <input
-          type="text"
-          name="isSensitive"
-          value={settings.sensitive ? "true" : "false"}
-          hidden
-          readOnly
-        />
         <textarea
           name="desc"
           autoComplete="off"
           rows={1}
           placeholder="What is happening?"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
           className="bg-transparent outline-none placeholder:text-textGray text-xl resize-none leading-relaxed"
           onInput={(e) => {
             e.currentTarget.style.height = "auto";
             e.currentTarget.style.height = e.currentTarget.scrollHeight + "px";
           }}
         />
+
+        {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+
         {media?.type.includes("image") && previewUrl && (
           <div className="relative rounded-xl overflow-hidden">
             <Image

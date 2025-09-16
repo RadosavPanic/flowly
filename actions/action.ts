@@ -113,3 +113,13 @@ export const addComment = async (
     return { success: false, error: true };
   }
 };
+
+export async function addPost(data: {
+  desc: string;
+  isSensitive?: boolean;
+  userId: string;
+  img?: string;
+  video?: string;
+}) {
+  return prisma.post.create({ data });
+}
