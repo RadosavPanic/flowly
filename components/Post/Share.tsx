@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useState, startTransition, useEffect } from "react";
+import { useState } from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Image from "next/image";
 import {
@@ -18,18 +18,12 @@ import cn from "clsx";
 import { useUser } from "@clerk/nextjs";
 import z from "zod";
 import { addPost } from "@/actions/action";
+import { useRouter } from "next/navigation";
 
 const PostSchema = z.object({
   desc: z.string().max(140),
   isSensitive: z.boolean().optional(),
 });
-
-type OptimisticPost = {
-  desc: string;
-  mediaUrl?: string;
-  success: boolean;
-  error: boolean;
-};
 
 const Share = () => {
   const [media, setMedia] = useState<File | null>();
@@ -40,10 +34,9 @@ const Share = () => {
   });
   const [desc, setDesc] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [optimisticPost, addOptimisticPost] = useOptimistic<
-    OptimisticPost[],
-    OptimisticPost
-  >([], (state, newPost) => [...state, newPost]);
+  const [isPending, setIsPending] = useState(false);
+
+  const router = useRouter();
 
   const { user } = useUser();
   if (!user) return;
@@ -55,6 +48,8 @@ const Share = () => {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setIsPending(true);
+
     const validatedFields = PostSchema.safeParse({
       desc,
       isSensitive: settings.sensitive,
@@ -63,17 +58,8 @@ const Share = () => {
     if (!validatedFields.success) {
       console.log(validatedFields.error.flatten().fieldErrors);
       setErrorMessage("Description too long or invalid input");
-      return { success: false, error: true };
+      return;
     }
-
-    startTransition(() => {
-      addOptimisticPost({
-        desc,
-        mediaUrl: media ? URL.createObjectURL(media) : undefined,
-        success: true,
-        error: false,
-      });
-    });
 
     let uploadResult;
 
@@ -128,7 +114,13 @@ const Share = () => {
 
       if (!result) throw new Error("DB Insert Failed");
 
-      return { success: true, error: false };
+      setMedia(null);
+      setDesc("");
+      setSettings({ type: "original", sensitive: false });
+
+      setTimeout(() => {
+        router.refresh();
+      }, 2000);
     } catch (uploadError) {
       if (uploadError instanceof ImageKitAbortError)
         console.error("Upload aborted:", uploadError.reason);
@@ -139,7 +131,8 @@ const Share = () => {
       else if (uploadError instanceof ImageKitServerError)
         console.error("Server error:", uploadError.message);
       else console.error("Error occured:", uploadError);
-      return;
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -282,9 +275,10 @@ const Share = () => {
           </div>
           <button
             type="submit"
-            className="bg-white text-black font-bold rounded-full py-2 px-4 cursor-pointer"
+            className="bg-white text-black font-bold rounded-full py-2 px-4 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-300"
+            disabled={isPending}
           >
-            Post
+            {isPending ? "Posting..." : "Post"}
           </button>
         </div>
       </div>

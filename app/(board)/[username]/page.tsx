@@ -23,8 +23,6 @@ const UserPage = async ({ params }: SearchParamProps) => {
 
   if (!user) return notFound();
 
-  console.log(user);
-
   return (
     <div className="">
       <div className="flex items-center gap-8 sticky top-0 backdrop-blur-md p-4 z-10 bg-black/65">
