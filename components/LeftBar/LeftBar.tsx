@@ -2,6 +2,7 @@ import { menuList } from "@/constants";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Link from "next/link";
 import React from "react";
+import Socket from "@/components/Socket/Socket";
 
 const LeftBar = () => {
   return (
@@ -80,6 +81,7 @@ const LeftBar = () => {
 
         <div className="hidden xxl:block cursor-pointer font-bold">...</div>
       </div>
+      <Socket />
     </div>
   );
 };
