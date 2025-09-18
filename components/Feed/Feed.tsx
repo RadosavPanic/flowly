@@ -2,6 +2,7 @@ import Post from "@/components/Post/Post";
 import { prisma } from "@/utils/prisma/prisma";
 import { auth } from "@clerk/nextjs/server";
 import InfiniteFeed from "./InfiniteFeed";
+import { buildPostIncludeQuery } from "@/utils/prisma/prisma.queries";
 
 const Feed = async ({ userProfileId }: { userProfileId: string }) => {
   const { userId } = await auth();
@@ -25,13 +26,7 @@ const Feed = async ({ userProfileId }: { userProfileId: string }) => {
         },
       };
 
-  const postIncludeQuery = {
-    user: { select: { displayName: true, username: true, img: true } },
-    _count: { select: { likes: true, reposts: true, comments: true } },
-    likes: { where: { userId: userId }, select: { id: true } },
-    reposts: { where: { userId: userId }, select: { id: true } },
-    saves: { where: { userId: userId }, select: { id: true } },
-  };
+  const postIncludeQuery = buildPostIncludeQuery(userId);
 
   const posts = await prisma.post.findMany({
     where: whereCondition,

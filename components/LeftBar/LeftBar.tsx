@@ -3,6 +3,7 @@ import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Link from "next/link";
 import React from "react";
 import Socket from "@/components/Socket/Socket";
+import Notification from "../Notification/Notification";
 
 const LeftBar = () => {
   return (
@@ -22,20 +23,26 @@ const LeftBar = () => {
 
         {/* MENU LIST */}
         <div className="flex flex-col gap-4">
-          {menuList.map((item) => (
-            <Link
-              href={item.link}
-              key={item.id}
-              className="flex items-center gap-4 p-2 rounded-full hover:bg-hoverMenuItem"
-            >
-              <OptimizedImage
-                src={`/icons/${item.icon}`}
-                alt={item.name}
-                width={24}
-                height={24}
-              />
-              <span className="hidden xxl:inline">{item.name}</span>
-            </Link>
+          {menuList.map((item, i) => (
+            <div key={item.id || i}>
+              {i === 2 && (
+                <div>
+                  <Notification />
+                </div>
+              )}
+              <Link
+                href={item.link}
+                className="flex items-center gap-4 p-2 rounded-full hover:bg-hoverMenuItem"
+              >
+                <OptimizedImage
+                  src={`/icons/${item.icon}`}
+                  alt={item.name}
+                  width={24}
+                  height={24}
+                />
+                <span className="hidden xxl:inline">{item.name}</span>
+              </Link>
+            </div>
           ))}
         </div>
 
@@ -60,6 +67,7 @@ const LeftBar = () => {
         </Link>
       </div>
 
+      <Socket />
       {/* USER */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -81,7 +89,6 @@ const LeftBar = () => {
 
         <div className="hidden xxl:block cursor-pointer font-bold">...</div>
       </div>
-      <Socket />
     </div>
   );
 };

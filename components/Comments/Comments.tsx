@@ -4,8 +4,9 @@ import Post from "@/components/Post/Post";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import { CommentWithDetails } from "@/types";
 import { useUser } from "@clerk/nextjs";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { addComment } from "@/actions/action";
+import { socket } from "@/utils/socketio/socket";
 
 const Comments = ({
   comments,
@@ -22,6 +23,21 @@ const Comments = ({
     success: false,
     error: false,
   });
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (state.success) {
+      socket.emit("sendNotification", {
+        receiverUsername: username,
+        data: {
+          senderUsername: user.username,
+          type: "comment",
+          link: `/${username}/status/${postId}`,
+        },
+      });
+    }
+  }, [state.success, username, user?.username, postId]);
 
   return (
     <div className="">

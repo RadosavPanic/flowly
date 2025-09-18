@@ -6,8 +6,11 @@ import PostReaction from "./PostReaction";
 import { PostInteractionsType } from "@/types";
 import cn from "clsx";
 import { likePost, rePost, savePost } from "@/actions/action";
+import { socket } from "@/utils/socketio/socket";
+import { useUser } from "@clerk/nextjs";
 
 const PostInteractions = ({
+  username,
   postId,
   count: { likes, reposts, comments },
   isLiked,
@@ -22,7 +25,22 @@ const PostInteractions = ({
     isSaved,
   });
 
+  const { user } = useUser();
+
   const likeAction = async () => {
+    if (!user) return;
+
+    if (!optimisticCount.isLiked) {
+      socket.emit("sendNotification", {
+        receiverUsername: username,
+        data: {
+          senderUsername: user.username,
+          type: "like",
+          link: `/${username}/status/${postId}`,
+        },
+      });
+    }
+
     addOptimisticCount("like");
     await likePost(postId);
     setState((prev) => ({
@@ -33,6 +51,19 @@ const PostInteractions = ({
   };
 
   const repostAction = async () => {
+    if (!user) return;
+
+    if (!optimisticCount.isReposted) {
+      socket.emit("sendNotification", {
+        receiverUsername: username,
+        data: {
+          senderUsername: user.username,
+          type: "repost",
+          link: `/${username}/status/${postId}`,
+        },
+      });
+    }
+
     addOptimisticCount("repost");
     await rePost(postId);
     setState((prev) => ({

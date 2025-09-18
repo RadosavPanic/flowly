@@ -58,6 +58,7 @@ type CommentWithDetails = PostType &
   };
 
 type PostInteractionsType = {
+  username: string;
   postId: number;
   count: {
     likes: number;

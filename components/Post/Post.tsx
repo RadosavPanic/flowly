@@ -31,7 +31,7 @@ const Post = ({
       <div className={cn("flex gap-4", type === "status" && "flex-col")}>
         <div
           className={cn(
-            "relative size-10 rounded-full overflow-hidden",
+            "relative size-10 rounded-full overflow-hidden -z-10",
             type === "status" && "hidden"
           )}
         >
@@ -113,6 +113,7 @@ const Post = ({
           )}
 
           <PostInteractions
+            username={originalPost.user.username}
             postId={originalPost.id}
             count={originalPost._count}
             isLiked={!!originalPost.likes.length}

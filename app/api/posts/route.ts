@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/prisma/prisma";
+import { buildPostIncludeQuery } from "@/utils/prisma/prisma.queries";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
@@ -29,13 +30,7 @@ export async function GET(req: NextRequest) {
           },
         };
 
-  const postIncludeQuery = {
-    user: { select: { displayName: true, username: true, img: true } },
-    _count: { select: { likes: true, reposts: true, comments: true } },
-    likes: { where: { userId: userId }, select: { id: true } },
-    reposts: { where: { userId: userId }, select: { id: true } },
-    saves: { where: { userId: userId }, select: { id: true } },
-  };
+  const postIncludeQuery = buildPostIncludeQuery(userId);
 
   const posts = await prisma.post.findMany({
     where: whereCondition,
