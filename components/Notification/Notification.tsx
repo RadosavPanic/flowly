@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import { socket } from "@/utils/socketio/socket";
 import { useRouter } from "next/navigation";
+import cn from "clsx";
 
 type NotificationType = {
   id: string;
@@ -59,8 +60,17 @@ const Notification = () => {
       </div>
 
       {open && (
-        <div className="absolute -right-full p-4 rounded-lg bg-white text-black flex flex-col gap-4 w-max">
-          <h1 className="text-xl text-textGray">Notifications</h1>
+        <div className="absolute left-full p-4 rounded-lg bg-white text-black flex flex-col gap-4 w-max">
+          <h1
+            className={cn(
+              "text-textGray",
+              notifications.length > 0 ? "text-xl" : "text-md"
+            )}
+          >
+            {notifications.length > 0
+              ? "Notifications"
+              : "No notifications yet"}
+          </h1>
           {notifications.map((n) => (
             <div
               className="cursor-pointer"

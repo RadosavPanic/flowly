@@ -26,7 +26,7 @@ const LeftBar = () => {
           {menuList.map((item, i) => (
             <div key={item.id || i}>
               {i === 2 && (
-                <div>
+                <div className="mb-4">
                   <Notification />
                 </div>
               )}
