@@ -4,9 +4,9 @@ import { Server } from "socket.io";
 import { v4 as uuidv4 } from "uuid";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
-const port = 3000;
-// when using middleware `hostname` and `port` must be provided below
+const hostname = "0.0.0.0";
+const port = process.env.PORT || 3000;
+
 const app = next({ dev, hostname, port, turbo: true });
 const handler = app.getRequestHandler();
 
@@ -17,7 +17,6 @@ const addUser = (username, socketId) => {
 
   if (!isExist) {
     onlineUsers.push({ username, socketId });
-    console.log(username + " added!");
   }
 };
 
@@ -27,7 +26,6 @@ const getUser = (username) => {
 
 const removeUser = (socketId) => {
   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
-  console.log("user removed!");
 };
 
 app.prepare().then(() => {
