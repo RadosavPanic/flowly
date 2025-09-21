@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import { v4 as uuidv4 } from "uuid";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "0.0.0.0";
+const hostname = "localhost";
 const port = process.env.PORT || 3000;
 
 const app = next({ dev, hostname, port, turbo: true });
