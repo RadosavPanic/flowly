@@ -29,40 +29,42 @@ const PopularTags = () => {
       <div className="">
         <div className="flex items-center justify-between">
           <span className="text-textGray text-sm">Technology • Trending</span>
-          <icons.InfoMore className="w-4" />
+          <icons.InfoMore className="w-4 cursor-pointer" />
         </div>
 
-        <h2 className="text-textGrayLight font-bold">OpenAI</h2>
+        <h2 className="text-textGrayLight font-bold cursor-pointer">OpenAI</h2>
         <span className="text-textGray text-sm">20K posts</span>
       </div>
 
       <div className="">
         <div className="flex items-center justify-between">
           <span className="text-textGray text-sm">Science • Discovery</span>
-          <icons.InfoMore className="w-4" />
+          <icons.InfoMore className="w-4 cursor-pointer" />
         </div>
 
-        <h2 className="text-textGrayLight font-bold">SpaceX</h2>
+        <h2 className="text-textGrayLight font-bold cursor-pointer">SpaceX</h2>
         <span className="text-textGray text-sm">17K posts</span>
       </div>
 
       <div className="">
         <div className="flex items-center justify-between">
           <span className="text-textGray text-sm">Cars • Innovation</span>
-          <icons.InfoMore className="w-4" />
+          <icons.InfoMore className="w-4 cursor-pointer" />
         </div>
 
-        <h2 className="text-textGrayLight font-bold">Tesla</h2>
+        <h2 className="text-textGrayLight font-bold cursor-pointer">Tesla</h2>
         <span className="text-textGray text-sm">17K posts</span>
       </div>
 
       <div className="">
         <div className="flex items-center justify-between">
           <span className="text-textGray text-sm">Sports • Football</span>
-          <icons.InfoMore className="w-4" />
+          <icons.InfoMore className="w-4 cursor-pointer" />
         </div>
 
-        <h2 className="text-textGrayLight font-bold">World Cup</h2>
+        <h2 className="text-textGrayLight font-bold cursor-pointer">
+          World Cup
+        </h2>
         <span className="text-textGray text-sm">17K posts</span>
       </div>
       <Link href="/" className="text-iconBlue">

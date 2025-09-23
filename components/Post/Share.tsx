@@ -19,6 +19,7 @@ import { useUser } from "@clerk/nextjs";
 import z from "zod";
 import { addPost } from "@/actions/action";
 import { useRouter } from "next/navigation";
+import { icons } from "@/constants";
 
 const PostSchema = z.object({
   desc: z.string().max(140),
@@ -229,49 +230,14 @@ const Share = () => {
               accept="image/*,video/*"
             />
             <label htmlFor="file">
-              <OptimizedImage
-                src="icons/image.svg"
-                alt=""
-                width={20}
-                height={20}
-                className="cursor-pointer"
-              />
+              <icons.ImageIcon className="size-5 cursor-pointer text-iconBlue" />
             </label>
-            <OptimizedImage
-              src="icons/gif.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
-            <OptimizedImage
-              src="icons/poll.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
-            <OptimizedImage
-              src="icons/emoji.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
-            <OptimizedImage
-              src="icons/schedule.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
-            <OptimizedImage
-              src="icons/location.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
+
+            <icons.Gif className="size-5 cursor-pointer text-iconBlue" />
+            <icons.Poll className="size-5 cursor-pointer text-iconBlue" />
+            <icons.Emoji className="size-5 cursor-pointer text-iconBlue" />
+            <icons.Schedule className="size-5 cursor-pointer text-iconBlue" />
+            <icons.Location className="size-5 cursor-pointer text-iconBlue" />
           </div>
           <button
             type="submit"

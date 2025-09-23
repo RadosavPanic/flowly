@@ -46,14 +46,14 @@ const Recommendations = async () => {
             </div>
 
             <div className="">
-              <h1 className="text-md font-bold">
+              <h1 className="text-md font-bold cursor-pointer">
                 {person.displayName || person.username}
               </h1>
               <span className="text-textGray text-sm">@{person.username}</span>
             </div>
           </div>
 
-          <button className="py-1 px-4 font-semibold bg-white text-black rounded-full">
+          <button className="py-1 px-4 font-semibold bg-white text-black rounded-full cursor-pointer">
             Follow
           </button>
         </div>

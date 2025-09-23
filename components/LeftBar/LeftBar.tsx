@@ -70,7 +70,7 @@ const LeftBar = () => {
       <Socket />
       {/* USER */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer">
           <div className="size-10 relative rounded-full overflow-hidden">
             <OptimizedImage
               src="/general/avatar.png"

@@ -17,6 +17,7 @@ const addUser = (username, socketId) => {
 
   if (!isExist) {
     onlineUsers.push({ username, socketId });
+    console.log(username + " added!");
   }
 };
 
@@ -26,6 +27,7 @@ const getUser = (username) => {
 
 const removeUser = (socketId) => {
   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+  console.log("User terminated!");
 };
 
 app.prepare().then(() => {
@@ -40,6 +42,8 @@ app.prepare().then(() => {
 
     socket.on("sendNotification", ({ receiverUsername, data }) => {
       const receiver = getUser(receiverUsername);
+      console.log(receiverUsername);
+      if (!receiver) return;
 
       io.to(receiver.socketId).emit("getNotification", {
         id: uuidv4(),
