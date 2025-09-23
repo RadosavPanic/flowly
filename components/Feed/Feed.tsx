@@ -49,7 +49,7 @@ const Feed = async ({ userProfileId }: { userProfileId: string }) => {
         </div>
       ))}
 
-      <InfiniteFeed />
+      <InfiniteFeed userProfileId={userId} />
     </div>
   );
 };
